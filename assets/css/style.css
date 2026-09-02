@@ -265,3 +265,7 @@ img{box-shadow:0 0 0 var(--img-border-w) var(--img-border-c)}
 .vs-drop-hint{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--sans);font-size:.85rem;color:var(--faint);pointer-events:none;text-align:center;padding:2rem;line-height:1.8}
 .photo-add{font-family:var(--sans);font-size:.8rem;color:var(--ink);background:var(--warm);border:1px solid var(--rule);border-radius:999px;padding:8px 20px;cursor:pointer;transition:all .2s}
 .photo-add:hover{border-color:var(--ink);box-shadow:var(--shadow)}
+.doc-title-row{display:flex;align-items:center;justify-content:space-between;gap:.8rem}
+.doc-upload{font-family:var(--sans);font-size:.62rem;color:var(--muted);background:none;border:1px solid var(--rule);border-radius:999px;padding:3px 12px;cursor:pointer;white-space:nowrap;transition:all .2s;flex-shrink:0}
+.doc-upload:hover{color:var(--ink);border-color:var(--ink)}
+.doc-upload.has-doc{color:var(--ink);border-color:var(--ink)}
