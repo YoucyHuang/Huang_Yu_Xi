@@ -1,0 +1,2096 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>📚 德语学习笔记 · C1 Grammatik Tracker</title>
+<style>
+/* ==========================================
+   CSS Custom Properties (主题色)
+   ========================================== */
+:root {
+  --bg: #faf8f5;
+  --bg-card: #ffffff;
+  --text: #2c2416;
+  --text-secondary: #6b5e4a;
+  --text-muted: #9b8e7a;
+  --border: #e8e0d5;
+  --border-active: #c4b89e;
+  --accent: #5B8C5A;
+  --accent-hover: #4a7a49;
+  --accent-light: #e8f0e8;
+  --shadow-sm: 0 1px 3px rgba(44,36,22,0.06);
+  --shadow-md: 0 4px 12px rgba(44,36,22,0.1);
+  --shadow-lg: 0 8px 24px rgba(44,36,22,0.14);
+  --radius: 10px;
+  --radius-sm: 6px;
+  --radius-xs: 4px;
+  --font-sans: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --font-de: 'Georgia', 'Times New Roman', serif;
+  --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* 知识点颜色 — C1 德语语法 */
+  --kp-fixed-expr: #9B59B6;
+  --kp-sub-clause: #6B8E23;
+  --kp-pronoun-art: #C8A951;
+  --kp-prep-case: #A0522D;
+  --kp-adj-adv: #5DADE2;
+  --kp-konjunktiv: #1ABC9C;
+  --kp-passiv: #E67E22;
+  --kp-modal: #E91E63;
+  --kp-nominal: #00897B;
+  --kp-partizip: #3F51B5;
+  --kp-funktionsverb: #7B1FA2;
+  --kp-praeposition: #607D8B;
+  --kp-pron-adverb: #795548;
+  --kp-reflexiv: #FF7043;
+
+  --left-width: 280px;
+  --right-width: 380px;
+}
+
+/* ==========================================
+   Reset & Base
+   ========================================== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 15px; }
+body {
+  font-family: var(--font-sans);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+/* ==========================================
+   Header
+   ========================================== */
+.header {
+  height: 52px;
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  gap: 16px;
+  z-index: 100;
+  position: relative;
+  box-shadow: var(--shadow-sm);
+}
+.header-logo { font-size: 1.3rem; }
+.header-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text);
+  letter-spacing: 0.02em;
+}
+.header-actions {
+  margin-left: auto;
+  display: flex;
+  gap: 8px;
+}
+.btn {
+  padding: 6px 14px;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  color: var(--text);
+  border-radius: var(--radius-xs);
+  cursor: pointer;
+  font-size: 0.82rem;
+  font-family: var(--font-sans);
+  transition: all var(--transition);
+  white-space: nowrap;
+}
+.btn:hover { background: var(--bg); border-color: var(--border-active); }
+.btn-primary {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+.btn-primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
+.btn-danger { color: #c0392b; }
+.btn-danger:hover { background: #fdf0ef; border-color: #e6b0aa; }
+
+/* ==========================================
+   Main Layout: 三栏
+   ========================================== */
+.main-layout {
+  display: flex;
+  height: calc(100vh - 52px);
+  position: relative;
+}
+
+/* --- 左栏: 索引面板 --- */
+.left-panel {
+  width: var(--left-width);
+  min-width: var(--left-width);
+  background: var(--bg-card);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.left-tabs {
+  display: flex;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.left-tab {
+  flex: 1;
+  padding: 10px 8px;
+  text-align: center;
+  font-size: 0.8rem;
+  cursor: pointer;
+  color: var(--text-muted);
+  border-bottom: 2px solid transparent;
+  transition: all var(--transition);
+  font-family: var(--font-sans);
+  background: none;
+}
+.left-tab:hover { color: var(--text); background: var(--bg); }
+.left-tab.active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+  font-weight: 600;
+}
+.left-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px;
+}
+.left-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 10px;
+  margin: 3px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  font-size: 0.82rem;
+  cursor: pointer;
+  transition: all var(--transition);
+  white-space: nowrap;
+  max-width: calc(100% - 6px);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.left-item:hover {
+  background: var(--accent-light);
+  border-color: var(--accent);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+.left-item .count-badge {
+  background: var(--accent);
+  color: #fff;
+  border-radius: 10px;
+  padding: 1px 6px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  min-width: 18px;
+  text-align: center;
+}
+.left-item .type-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.left-sentence-item {
+  display: block;
+  padding: 8px 10px;
+  margin: 3px 0;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all var(--transition);
+  line-height: 1.5;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: var(--font-de);
+}
+.left-sentence-item:hover {
+  border-color: var(--accent);
+  background: var(--accent-light);
+}
+.left-section-title {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  padding: 8px 4px 4px;
+  font-weight: 600;
+}
+
+/* --- 中栏: 主显示区 --- */
+.middle-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-width: 0;
+}
+.middle-input-area {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-card);
+  flex-shrink: 0;
+}
+.middle-input-area textarea {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  font-family: var(--font-de);
+  font-size: 1rem;
+  resize: vertical;
+  min-height: 52px;
+  max-height: 120px;
+  background: var(--bg);
+  color: var(--text);
+  transition: border-color var(--transition);
+  line-height: 1.6;
+}
+.middle-input-area textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(91,140,90,0.1);
+}
+.middle-input-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+  align-items: center;
+}
+.middle-display {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px 28px;
+}
+.sentence-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  margin-bottom: 16px;
+  cursor: pointer;
+  transition: all var(--transition);
+  position: relative;
+}
+.sentence-card:hover {
+  box-shadow: var(--shadow-md);
+  border-color: var(--border-active);
+}
+.sentence-card.selected {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(91,140,90,0.1);
+}
+.sentence-card .sentence-text {
+  font-family: var(--font-de);
+  font-size: 1.15rem;
+  line-height: 2.2;
+  letter-spacing: 0.02em;
+  word-spacing: 0.05em;
+  user-select: text;
+  cursor: text;
+}
+.sentence-card .sentence-meta {
+  display: flex;
+  gap: 12px;
+  margin-top: 10px;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+.sentence-card .delete-sentence-btn {
+  position: absolute;
+  top: 10px;
+  right: 14px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  opacity: 0;
+  transition: opacity var(--transition);
+  padding: 4px 8px;
+  border-radius: var(--radius-xs);
+}
+.sentence-card:hover .delete-sentence-btn { opacity: 0.6; }
+.sentence-card .delete-sentence-btn:hover { opacity: 1; color: #c0392b; background: #fdf0ef; }
+
+/* 知识标注的样式 */
+.ann-text {
+  position: relative;
+  cursor: pointer;
+  transition: background 0.15s;
+  border-radius: 2px;
+  padding: 1px 0;
+}
+.ann-text:hover {
+  filter: brightness(0.92);
+}
+
+/* 各种线条样式 */
+.ann-underline { text-decoration-line: underline; text-decoration-style: solid; text-underline-offset: 3px; }
+.ann-wavy { text-decoration-line: underline; text-decoration-style: wavy; text-underline-offset: 3px; }
+.ann-double { text-decoration-line: underline; text-decoration-style: double; text-underline-offset: 3px; }
+.ann-dashed { text-decoration-line: underline; text-decoration-style: dashed; text-underline-offset: 3px; }
+.ann-dotted { text-decoration-line: underline; text-decoration-style: dotted; text-underline-offset: 3px; }
+
+/* 生词样式 */
+.vocab-word {
+  background: linear-gradient(180deg, transparent 60%, #ffeaa7 60%);
+  cursor: pointer;
+  border-radius: 2px;
+  padding: 1px 2px;
+  transition: background 0.15s;
+}
+.vocab-word:hover {
+  background: linear-gradient(180deg, transparent 40%, #fdcb6e 40%);
+}
+
+/* 词汇统计 */
+.vocab-count {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  margin-left: 4px;
+}
+
+/* --- 右栏: 详情面板 --- */
+.right-panel {
+  width: var(--right-width);
+  min-width: var(--right-width);
+  background: var(--bg-card);
+  border-left: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.right-panel.collapsed {
+  width: 0;
+  min-width: 0;
+  border-left: none;
+  overflow: hidden;
+}
+.right-panel-header {
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+.right-panel-title {
+  font-weight: 600;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.right-panel-title .type-indicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+.right-close-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.1rem;
+  color: var(--text-muted);
+  padding: 4px 8px;
+  border-radius: var(--radius-xs);
+  transition: all var(--transition);
+}
+.right-close-btn:hover { color: var(--text); background: var(--bg); }
+.right-panel-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px 18px;
+}
+.right-section {
+  margin-bottom: 20px;
+}
+.right-section-title {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+.right-note-textarea {
+  width: 100%;
+  min-height: 100px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  resize: vertical;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+}
+.right-note-textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(91,140,90,0.08);
+}
+.related-sentence {
+  padding: 10px 12px;
+  margin: 6px 0;
+  background: var(--bg);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-de);
+  font-size: 0.85rem;
+  cursor: pointer;
+  border-left: 3px solid transparent;
+  transition: all var(--transition);
+  line-height: 1.6;
+}
+.related-sentence:hover {
+  border-left-color: var(--accent);
+  background: var(--accent-light);
+}
+.related-sentence .highlight-word {
+  font-weight: 600;
+  color: var(--accent);
+}
+.empty-state {
+  text-align: center;
+  color: var(--text-muted);
+  padding: 40px 20px;
+  font-size: 0.85rem;
+  line-height: 1.8;
+}
+.empty-state-icon { font-size: 2.5rem; margin-bottom: 10px; }
+
+/* ==========================================
+   自定义右键菜单
+   ========================================== */
+.context-menu {
+  position: fixed;
+  z-index: 9999;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  padding: 6px 0;
+  min-width: 240px;
+  max-height: 420px;
+  overflow-y: auto;
+  display: none;
+}
+.context-menu .menu-section {
+  padding: 6px 14px 2px;
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+.context-menu .menu-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-size: 0.82rem;
+  transition: background var(--transition);
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+  font-family: var(--font-sans);
+  color: var(--text);
+}
+.context-menu .menu-item:hover {
+  background: var(--accent-light);
+}
+.context-menu .menu-color-dot {
+  width: 14px;
+  height: 4px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+.context-menu .menu-line-preview {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  margin-left: auto;
+}
+
+/* ==========================================
+   悬浮提示 (Tooltip)
+   ========================================== */
+.tooltip {
+  position: fixed;
+  z-index: 9998;
+  background: #2c2416;
+  color: #faf8f5;
+  padding: 6px 12px;
+  border-radius: var(--radius-xs);
+  font-size: 0.78rem;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 0.15s, transform 0.15s;
+  max-width: 280px;
+  line-height: 1.5;
+  box-shadow: var(--shadow-md);
+}
+.tooltip.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.tooltip .tt-type { font-weight: 600; color: #fff; }
+.tooltip .tt-meaning { color: #ffeaa7; margin-top: 2px; }
+
+/* ==========================================
+   词汇录入弹窗 (双击)
+   ========================================== */
+.vocab-popup {
+  position: fixed;
+  z-index: 9997;
+  background: var(--bg-card);
+  border: 2px solid var(--accent);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  padding: 16px 20px;
+  width: 300px;
+  display: none;
+}
+.vocab-popup .vp-title {
+  font-weight: 600;
+  margin-bottom: 10px;
+  font-size: 0.9rem;
+}
+.vocab-popup .vp-word {
+  font-family: var(--font-de);
+  font-size: 1.2rem;
+  color: var(--accent);
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+.vocab-popup input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+  margin-bottom: 8px;
+  font-family: var(--font-sans);
+}
+.vocab-popup input:focus { outline: none; border-color: var(--accent); }
+.vocab-popup .vp-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+/* ==========================================
+   图例帮助
+   ========================================== */
+.legend-toggle {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  cursor: pointer;
+  user-select: none;
+  padding: 4px 8px;
+}
+.legend-toggle:hover { color: var(--text); }
+.legend-panel {
+  position: fixed;
+  top: 60px;
+  right: 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  padding: 16px;
+  z-index: 9000;
+  display: none;
+  max-height: 500px;
+  overflow-y: auto;
+  width: 300px;
+}
+.legend-panel.show { display: block; }
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 5px 0;
+  font-size: 0.78rem;
+}
+.legend-line {
+  width: 30px;
+  flex-shrink: 0;
+}
+
+/* ==========================================
+   滚动条
+   ========================================== */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--border-active); }
+
+/* ==========================================
+   响应式
+   ========================================== */
+@media (max-width: 1100px) {
+  .left-panel { width: 220px; min-width: 220px; }
+  .right-panel { width: 320px; min-width: 320px; }
+}
+@media (max-width: 800px) {
+  .main-layout { flex-direction: column; }
+  .left-panel { width: 100%; min-width: 100%; max-height: 180px; }
+  .right-panel { width: 100%; min-width: 100%; max-height: 300px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ==========================================
+     Header
+     ========================================== -->
+<header class="header">
+  <span class="header-logo">📚</span>
+  <span class="header-title">德语学习笔记 · C1 Grammatik Tracker</span>
+  <div class="header-actions">
+    <button class="btn legend-toggle" id="legendToggle" title="图例">🎨 图例</button>
+    <button class="btn" id="exportBtn" title="导出数据">📤 导出</button>
+    <button class="btn" id="importBtn" title="导入数据">📥 导入</button>
+    <input type="file" id="importFile" accept=".json" style="display:none">
+    <button class="btn btn-danger" id="clearAllBtn" title="清空所有数据">🗑 清空</button>
+  </div>
+</header>
+
+<!-- ==========================================
+     Legend Panel
+     ========================================== -->
+<div class="legend-panel" id="legendPanel"></div>
+
+<!-- ==========================================
+     Main Layout
+     ========================================== -->
+<div class="main-layout">
+
+  <!-- 左栏: 索引面板 -->
+  <aside class="left-panel" id="leftPanel">
+    <div class="left-tabs">
+      <button class="left-tab active" data-tab="vocab">📝 词汇</button>
+      <button class="left-tab" data-tab="knowledge">🎯 知识点</button>
+      <button class="left-tab" data-tab="sentences">📖 句子</button>
+    </div>
+    <div class="left-content" id="leftContent">
+      <div class="empty-state">
+        <div class="empty-state-icon">📝</div>
+        <div>还没有记录<br>输入你的第一个德语句子吧！</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- 中栏: 主显示区 -->
+  <main class="middle-panel" id="middlePanel">
+    <div class="middle-input-area">
+      <textarea id="sentenceInput"
+        placeholder="在这里输入或粘贴德语句子...&#10;例如: Der Mann, der dort steht, ist mein Bruder."
+      ></textarea>
+      <div class="middle-input-actions">
+        <button class="btn btn-primary" id="addSentenceBtn">➕ 添加句子</button>
+        <span style="font-size:0.75rem;color:var(--text-muted);margin-left:8px;">
+          💡 选中文字后<strong>右键</strong>标注知识点 · <strong>双击</strong>生词添加释义
+        </span>
+      </div>
+    </div>
+    <div class="middle-display" id="sentenceDisplay">
+      <div class="empty-state">
+        <div class="empty-state-icon">📖</div>
+        <div>欢迎使用德语学习笔记！<br><br>
+          <strong>快速上手:</strong><br>
+          1️⃣ 在上方输入德语句子并添加<br>
+          2️⃣ 选中文字后右键 → 选择知识点类型标注<br>
+          3️⃣ 双击生词 → 添加中文释义<br>
+          4️⃣ 点击已标注的文字查看详情<br>
+          5️⃣ 左侧面板可查看所有词汇和知识点索引
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- 右栏: 详情面板 -->
+  <aside class="right-panel collapsed" id="rightPanel">
+    <div class="right-panel-header">
+      <span class="right-panel-title" id="rightTitle">
+        <span class="type-indicator" id="rightTypeIndicator"></span>
+        <span id="rightTypeName">知识点详情</span>
+      </span>
+      <button class="right-close-btn" id="rightCloseBtn">✕</button>
+    </div>
+    <div class="right-panel-body" id="rightBody"></div>
+  </aside>
+
+</div>
+
+<!-- ==========================================
+     Custom Context Menu
+     ========================================== -->
+<div class="context-menu" id="contextMenu"></div>
+
+<!-- ==========================================
+     Tooltip
+     ========================================== -->
+<div class="tooltip" id="tooltip"></div>
+
+<!-- ==========================================
+     Vocabulary Popup
+     ========================================== -->
+<div class="vocab-popup" id="vocabPopup">
+  <div class="vp-title">📝 记录生词释义</div>
+  <div class="vp-word" id="vpWord"></div>
+  <input type="text" id="vpMeaning" placeholder="输入中文释义...">
+  <input type="text" id="vpNote" placeholder="笔记（可选）...">
+  <div class="vp-actions">
+    <button class="btn" id="vpCancel">取消</button>
+    <button class="btn btn-primary" id="vpSave">💾 保存</button>
+  </div>
+</div>
+
+<script>
+/* ==========================================
+   数据模型 & 配置
+   ========================================== */
+
+// C1 德语语法知识点类型配置
+const KNOWLEDGE_TYPES = [
+  { id: 'fixed-expr',    name: '固定搭配',       nameDe: 'Feste Verbindungen',     color: '#9B59B6', line: 'wavy',    icon: '🔗' },
+  { id: 'sub-clause',    name: '从句',           nameDe: 'Nebensätze',             color: '#6B8E23', line: 'double',  icon: '📎' },
+  { id: 'pronoun-art',   name: '冠词代词形式',    nameDe: 'Pronominalformen',       color: '#C8A951', line: 'wavy',    icon: '📌' },
+  { id: 'prep-case',     name: '静三动四/人三物四', nameDe: 'Wechselpräpositionen',  color: '#A0522D', line: 'underline', icon: '🧭' },
+  { id: 'adj-adv',       name: '形容词/副词',     nameDe: 'Adjektive/Adverbien',    color: '#5DADE2', line: 'underline', icon: '🎨' },
+  { id: 'konjunktiv',    name: '虚拟式',          nameDe: 'Konjunktiv I & II',      color: '#1ABC9C', line: 'dashed',  icon: '💭' },
+  { id: 'passiv',        name: '被动态',          nameDe: 'Passiv',                 color: '#E67E22', line: 'wavy',    icon: '🔄' },
+  { id: 'modal',         name: '情态动词',        nameDe: 'Modalverben',            color: '#E91E63', line: 'dotted',  icon: '⚡' },
+  { id: 'nominal',       name: '名词化',          nameDe: 'Nominalisierung',        color: '#00897B', line: 'double',  icon: '🏷' },
+  { id: 'partizip',      name: '分词结构',        nameDe: 'Partizipialkonstruktionen', color: '#3F51B5', line: 'dashed', icon: '✂️' },
+  { id: 'funktionsverb', name: '功能动词结构',     nameDe: 'Funktionsverbgefüge',    color: '#7B1FA2', line: 'wavy',    icon: '🔧' },
+  { id: 'praeposition',  name: '介词搭配',        nameDe: 'Präpositionen mit Kasus', color: '#607D8B', line: 'underline', icon: '📍' },
+  { id: 'pron-adverb',   name: '代副词',          nameDe: 'Pronominaladverbien',     color: '#795548', line: 'dotted',  icon: '↔️' },
+  { id: 'reflexiv',      name: '反身动词',        nameDe: 'Reflexive Verben',        color: '#FF7043', line: 'wavy',    icon: '🪞' },
+  { id: 'other',         name: '其他',           nameDe: 'Sonstige Grammatik',      color: '#888888', line: 'dotted',  icon: '📋' },
+];
+
+// 按 id 索引
+const KT_MAP = {};
+KNOWLEDGE_TYPES.forEach(kt => { KT_MAP[kt.id] = kt; });
+
+// 应用状态
+let appData = {
+  version: 2,
+  sentences: [],
+  // 全局知识点笔记 (按 knowledgeType + text 索引)
+  knowledgeNotes: {}
+};
+
+// 当前选中的详情
+let currentDetail = null; // { type: 'annotation'|'vocab', sentenceId, annotationId/vocabId, ... }
+
+// ==========================================
+// localStorage
+// ==========================================
+const STORAGE_KEY = 'german-learning-c1-data';
+
+function saveData() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
+  } catch (e) {
+    console.warn('localStorage 存储失败:', e);
+  }
+}
+
+function loadData() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      // 合并默认结构
+      appData = {
+        version: 2,
+        sentences: [],
+        knowledgeNotes: {},
+        ...parsed
+      };
+      // 确保每个句子都有必要字段
+      appData.sentences.forEach(s => {
+        if (!s.annotations) s.annotations = [];
+        if (!s.vocabulary) s.vocabulary = [];
+        s.annotations.forEach(a => {
+          if (!a.note) a.note = '';
+        });
+        s.vocabulary.forEach(v => {
+          if (!v.note) v.note = '';
+        });
+      });
+      if (!appData.knowledgeNotes) appData.knowledgeNotes = {};
+    }
+  } catch (e) {
+    console.warn('localStorage 读取失败:', e);
+  }
+}
+
+// ==========================================
+// 辅助函数
+// ==========================================
+function genId() {
+  return 'id_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 8);
+}
+
+function formatDate(iso) {
+  const d = new Date(iso);
+  const now = new Date();
+  const diff = now - d;
+  if (diff < 60000) return '刚刚';
+  if (diff < 3600000) return Math.floor(diff / 60000) + ' 分钟前';
+  if (diff < 86400000) return Math.floor(diff / 3600000) + ' 小时前';
+  if (diff < 604800000) return Math.floor(diff / 86400000) + ' 天前';
+  return d.toLocaleDateString('zh-CN', { year: 'numeric', month: 'short', day: 'numeric' });
+}
+
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+// 获取所有句子中包含某段文字的所有出现位置
+function findAllOccurrences(text, excludeSentenceId, excludeAnnotationId) {
+  const results = [];
+  const lowerText = text.toLowerCase().trim();
+  appData.sentences.forEach(s => {
+    s.annotations.forEach(a => {
+      if (a.text.toLowerCase().trim() === lowerText) {
+        if (s.id === excludeSentenceId && a.id === excludeAnnotationId) return;
+        results.push({ sentence: s, annotation: a });
+      }
+    });
+  });
+  return results;
+}
+
+// 获取某个词汇在所有句子中的出现
+function findVocabOccurrences(word, excludeSentenceId) {
+  const results = [];
+  const lowerWord = word.toLowerCase().trim();
+  appData.sentences.forEach(s => {
+    s.vocabulary.forEach(v => {
+      if (v.word.toLowerCase().trim() === lowerWord) {
+        if (s.id === excludeSentenceId) return;
+        results.push({ sentence: s, vocab: v });
+      }
+    });
+  });
+  return results;
+}
+
+// 在句子文本中查找单词的所有位置
+function findWordPositions(text, word) {
+  const positions = [];
+  const lower = text.toLowerCase();
+  const lowerWord = word.toLowerCase();
+  let idx = 0;
+  while ((idx = lower.indexOf(lowerWord, idx)) !== -1) {
+    // 检查单词边界
+    const before = idx === 0 || /\s|[.,!?;:()"„""''«»—–\-]/.test(text[idx - 1]);
+    const after = idx + word.length >= text.length || /\s|[.,!?;:()"„""''«»—–\-]/.test(text[idx + word.length]);
+    if (before && after) {
+      positions.push({ start: idx, end: idx + word.length });
+    }
+    idx += word.length;
+  }
+  return positions;
+}
+
+// 查找文本中未被标注的位置（多次出现时智能跳过已标注的）
+function findUnannotatedPosition(sentence, selectedText) {
+  const fullText = sentence.text;
+  let searchFrom = 0;
+  while (searchFrom < fullText.length) {
+    const pos = fullText.indexOf(selectedText, searchFrom);
+    if (pos === -1) return -1;
+    const posEnd = pos + selectedText.length;
+    const overlaps = sentence.annotations.some(a => pos < a.end && posEnd > a.start);
+    if (!overlaps) return pos;
+    searchFrom = pos + 1;
+  }
+  return -1;
+}
+
+// ==========================================
+// 渲染: 带标注的句子文本
+// ==========================================
+function renderAnnotatedText(sentence) {
+  const text = sentence.text;
+  const annotations = [...sentence.annotations].sort((a, b) => a.startIndex - b.startIndex);
+  const vocab = sentence.vocabulary || [];
+
+  // 构建所有需要标记的片段
+  const segments = [];
+
+  // 添加 annotation 片段
+  annotations.forEach(ann => {
+    segments.push({
+      type: 'annotation',
+      start: ann.startIndex,
+      end: ann.endIndex,
+      annotation: ann,
+      priority: 2
+    });
+  });
+
+  // 添加 vocabulary 片段（找出单词在文本中的所有位置）
+  vocab.forEach(v => {
+    const positions = findWordPositions(text, v.word);
+    positions.forEach(pos => {
+      const overlaps = segments.some(seg =>
+        seg.priority >= 2 && pos.start < seg.end && pos.end > seg.start
+      );
+      if (!overlaps) {
+        segments.push({
+          type: 'vocab',
+          start: pos.start,
+          end: pos.end,
+          vocab: v,
+          priority: 1
+        });
+      }
+    });
+  });
+
+  // 按优先级排序，高优先级保留
+  const sortedSegs = [...segments].sort((a, b) => b.priority - a.priority);
+  const finalSegments = [];
+  const occupied = new Array(text.length).fill(false);
+
+  sortedSegs.forEach(seg => {
+    let canPlace = true;
+    for (let i = seg.start; i < seg.end; i++) {
+      if (occupied[i]) { canPlace = false; break; }
+    }
+    if (canPlace) {
+      for (let i = seg.start; i < seg.end; i++) occupied[i] = true;
+      finalSegments.push(seg);
+    }
+  });
+
+  // 按位置排序
+  finalSegments.sort((a, b) => a.start - b.start);
+
+  // 构建 HTML
+  const parts = [];
+  let cursor = 0;
+  finalSegments.forEach(seg => {
+    if (seg.start > cursor) {
+      parts.push(escapeHtml(text.slice(cursor, seg.start)));
+    }
+    const segText = text.slice(seg.start, seg.end);
+    if (seg.type === 'annotation') {
+      const kt = KT_MAP[seg.annotation.knowledgeType];
+      const lineClass = 'ann-' + (kt ? kt.line : 'wavy');
+      const color = kt ? kt.color : '#999';
+      parts.push(
+        `<span class="ann-text ${lineClass}" ` +
+        `style="text-decoration-color:${color};color:inherit;" ` +
+        `data-sentence-id="${escapeHtml(sentence.id)}" ` +
+        `data-annotation-id="${escapeHtml(seg.annotation.id)}" ` +
+        `data-type="annotation" ` +
+        `title="">${escapeHtml(segText)}</span>`
+      );
+    } else if (seg.type === 'vocab') {
+      parts.push(
+        `<span class="vocab-word" ` +
+        `data-sentence-id="${escapeHtml(sentence.id)}" ` +
+        `data-vocab-id="${escapeHtml(seg.vocab.id)}" ` +
+        `data-type="vocab" ` +
+        `data-meaning="${escapeHtml(seg.vocab.meaning)}" ` +
+        `data-note="${escapeHtml(seg.vocab.note || '')}">${escapeHtml(segText)}</span>`
+      );
+    }
+    cursor = seg.end;
+  });
+  if (cursor < text.length) {
+    parts.push(escapeHtml(text.slice(cursor)));
+  }
+
+  return parts.join('');
+}
+
+// ==========================================
+// 渲染: 句子卡片
+// ==========================================
+function renderSentenceCard(sentence, selected) {
+  const rendered = renderAnnotatedText(sentence);
+  const annCount = sentence.annotations.length;
+  const vocabCount = (sentence.vocabulary || []).length;
+  const tags = [];
+  if (annCount > 0) tags.push(`${annCount} 个知识点`);
+  if (vocabCount > 0) tags.push(`${vocabCount} 个生词`);
+
+  return `
+    <div class="sentence-card ${selected ? 'selected' : ''}" data-sentence-id="${sentence.id}">
+      <button class="delete-sentence-btn" data-action="delete-sentence" data-sentence-id="${sentence.id}" title="删除此句子">🗑</button>
+      <div class="sentence-text">${rendered}</div>
+      <div class="sentence-meta">
+        <span>🕐 ${formatDate(sentence.date)}</span>
+        ${tags.map(t => `<span>· ${t}</span>`).join('')}
+      </div>
+    </div>
+  `;
+}
+
+// ==========================================
+// 渲染: 全部句子列表
+// ==========================================
+function renderAllSentences() {
+  const container = document.getElementById('sentenceDisplay');
+  if (appData.sentences.length === 0) {
+    container.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-state-icon">📖</div>
+        <div>还没有句子记录<br><br>
+          <strong>快速上手:</strong><br>
+          1️⃣ 在上方输入德语句子并添加<br>
+          2️⃣ 选中文字后<strong>右键</strong> → 选择知识点类型标注<br>
+          3️⃣ <strong>双击</strong>生词 → 添加中文释义<br>
+          4️⃣ 点击已标注的文字查看详情
+        </div>
+      </div>`;
+    return;
+  }
+
+  // 按日期倒序
+  const sorted = [...appData.sentences].sort((a, b) => new Date(b.date) - new Date(a.date));
+  const selectedId = currentDetail ? currentDetail.sentenceId : null;
+  container.innerHTML = sorted.map(s => renderSentenceCard(s, s.id === selectedId)).join('');
+
+  // 绑定事件
+  bindSentenceCardEvents(container);
+}
+
+// ==========================================
+// 渲染: 左侧索引面板
+// ==========================================
+function renderLeftPanel(tab) {
+  const container = document.getElementById('leftContent');
+
+  if (tab === 'vocab') {
+    renderVocabIndex(container);
+  } else if (tab === 'knowledge') {
+    renderKnowledgeIndex(container);
+  } else if (tab === 'sentences') {
+    renderSentenceIndex(container);
+  }
+}
+
+function renderVocabIndex(container) {
+  // 收集所有词汇
+  const vocabMap = {};
+  appData.sentences.forEach(s => {
+    (s.vocabulary || []).forEach(v => {
+      const key = v.word.toLowerCase().trim();
+      if (!vocabMap[key]) {
+        vocabMap[key] = { word: v.word, meaning: v.meaning, note: v.note, count: 0, sentenceIds: new Set() };
+      }
+      vocabMap[key].count++;
+      vocabMap[key].sentenceIds.add(s.id);
+    });
+  });
+
+  const items = Object.values(vocabMap).sort((a, b) => b.count - a.count);
+
+  if (items.length === 0) {
+    container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📝</div><div>双击句子中的生词<br>即可录入词汇</div></div>';
+    return;
+  }
+
+  let html = `<div class="left-section-title">生词列表 (${items.length})</div>`;
+  items.forEach(item => {
+    html += `
+      <div class="left-item vocab-index-item" data-word="${escapeHtml(item.word)}" data-type="vocab-index" title="${escapeHtml(item.meaning)}${item.note ? ' — ' + item.note : ''} · 出现 ${item.count} 次">
+        📝 ${escapeHtml(item.word)}
+        <span class="count-badge">${item.count}</span>
+      </div>`;
+  });
+
+  container.innerHTML = html;
+  bindLeftItemEvents(container);
+}
+
+function renderKnowledgeIndex(container) {
+  // 按知识点类型分组
+  const groups = {};
+  appData.sentences.forEach(s => {
+    s.annotations.forEach(a => {
+      const kt = KT_MAP[a.knowledgeType];
+      if (!kt) return;
+      if (!groups[kt.id]) {
+        groups[kt.id] = { kt, items: {} };
+      }
+      const key = a.text.toLowerCase().trim();
+      if (!groups[kt.id].items[key]) {
+        groups[kt.id].items[key] = { text: a.text, count: 0, type: kt.id };
+      }
+      groups[kt.id].items[key].count++;
+    });
+  });
+
+  const groupIds = Object.keys(groups).sort((a, b) =>
+    Object.values(groups[b].items).reduce((s, i) => s + i.count, 0) -
+    Object.values(groups[a].items).reduce((s, i) => s + i.count, 0)
+  );
+
+  if (groupIds.length === 0) {
+    container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">🎯</div><div>选中文字右键标注知识点<br>即可在此查看</div></div>';
+    return;
+  }
+
+  let html = '';
+  groupIds.forEach(gid => {
+    const group = groups[gid];
+    const total = Object.values(group.items).reduce((s, i) => s + i.count, 0);
+    html += `<div class="left-section-title" style="display:flex;align-items:center;gap:6px;">
+      <span class="type-dot" style="background:${group.kt.color};"></span>
+      ${group.kt.icon} ${group.kt.name} (${total})
+    </div>`;
+    const sorted = Object.values(group.items).sort((a, b) => b.count - a.count);
+    sorted.forEach(item => {
+      html += `
+        <div class="left-item kp-index-item"
+             data-text="${escapeHtml(item.text)}"
+             data-type-id="${escapeHtml(item.type)}"
+             data-type="kp-index"
+             title="${group.kt.name}: ${escapeHtml(item.text)} · 出现 ${item.count} 次">
+          ${escapeHtml(item.text)}
+          <span class="count-badge">${item.count}</span>
+        </div>`;
+    });
+  });
+
+  container.innerHTML = html;
+  bindLeftItemEvents(container);
+}
+
+function renderSentenceIndex(container) {
+  if (appData.sentences.length === 0) {
+    container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📖</div><div>还没有句子记录</div></div>';
+    return;
+  }
+
+  const sorted = [...appData.sentences].sort((a, b) => new Date(b.date) - new Date(a.date));
+  let html = `<div class="left-section-title">所有句子 (${sorted.length})</div>`;
+  sorted.forEach(s => {
+    html += `
+      <div class="left-sentence-item sentence-index-item"
+           data-sentence-id="${s.id}"
+           data-type="sentence-index"
+           title="${escapeHtml(s.text)}">
+        ${escapeHtml(s.text.length > 30 ? s.text.slice(0, 30) + '...' : s.text)}
+        <span style="font-size:0.65rem;color:var(--text-muted);margin-left:4px;">${formatDate(s.date)}</span>
+      </div>`;
+  });
+
+  container.innerHTML = html;
+  bindLeftItemEvents(container);
+}
+
+function bindLeftItemEvents(container) {
+  // 词汇索引项点击
+  container.querySelectorAll('.vocab-index-item').forEach(el => {
+    el.addEventListener('click', () => {
+      const word = el.dataset.word;
+      showVocabDetail(word);
+    });
+  });
+
+  // 知识点索引项点击
+  container.querySelectorAll('.kp-index-item').forEach(el => {
+    el.addEventListener('click', () => {
+      const text = el.dataset.text;
+      const typeId = el.dataset.typeId;
+      showKnowledgeDetailFromIndex(text, typeId);
+    });
+  });
+
+  // 句子索引项点击
+  container.querySelectorAll('.sentence-index-item').forEach(el => {
+    el.addEventListener('click', () => {
+      const sentenceId = el.dataset.sentenceId;
+      // 滚动到对应句子
+      const card = document.querySelector(`.sentence-card[data-sentence-id="${sentenceId}"]`);
+      if (card) {
+        card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        card.classList.add('selected');
+        setTimeout(() => card.classList.remove('selected'), 2000);
+      }
+    });
+  });
+}
+
+// ==========================================
+// 渲染: 右栏详情
+// ==========================================
+function showAnnotationDetail(sentenceId, annotationId) {
+  const sentence = appData.sentences.find(s => s.id === sentenceId);
+  if (!sentence) return;
+  const annotation = sentence.annotations.find(a => a.id === annotationId);
+  if (!annotation) return;
+
+  currentDetail = { type: 'annotation', sentenceId, annotationId };
+
+  const kt = KT_MAP[annotation.knowledgeType];
+  if (!kt) return;
+
+  const panel = document.getElementById('rightPanel');
+  const title = document.getElementById('rightTypeName');
+  const indicator = document.getElementById('rightTypeIndicator');
+  const body = document.getElementById('rightBody');
+
+  // 打开右栏
+  panel.classList.remove('collapsed');
+
+  // 标题
+  indicator.style.background = kt.color;
+  title.innerHTML = `${kt.icon} ${kt.name} <span style="font-weight:400;font-size:0.75rem;color:var(--text-muted);">${kt.nameDe}</span>`;
+
+  // 知识点全局笔记 key
+  const noteKey = `${annotation.knowledgeType}:${annotation.text.toLowerCase().trim()}`;
+  const savedNote = (appData.knowledgeNotes && appData.knowledgeNotes[noteKey]) || annotation.note || '';
+
+  // 查找所有同样文字出现的位置
+  const occurrences = findAllOccurrences(annotation.text, sentenceId, annotationId);
+  // 加上当前这个
+  const allOccurrences = [
+    { sentence, annotation, isCurrent: true },
+    ...occurrences
+  ];
+
+  body.innerHTML = `
+    <div class="right-section">
+      <div class="right-section-title">📌 标注内容</div>
+      <div style="font-family:var(--font-de);font-size:1.1rem;padding:8px 12px;background:var(--bg);border-radius:var(--radius-sm);margin-bottom:8px;border-left:4px solid ${kt.color};">
+        ${escapeHtml(annotation.text)}
+      </div>
+      <div style="font-size:0.78rem;color:var(--text-muted);">
+        所属句子: ${escapeHtml(sentence.text.length > 50 ? sentence.text.slice(0, 50) + '...' : sentence.text)}
+      </div>
+    </div>
+
+    <div class="right-section">
+      <div class="right-section-title">📝 笔记</div>
+      <textarea class="right-note-textarea" id="rightAnnotationNote"
+        placeholder="记录你对这个知识点的理解、用法总结...">${escapeHtml(savedNote)}</textarea>
+      <button class="btn btn-primary" id="saveAnnotationNoteBtn" style="margin-top:8px;width:100%;">💾 保存笔记</button>
+    </div>
+
+    <div class="right-section">
+      <div class="right-section-title">🔍 其他出现位置 (${occurrences.length})</div>
+      ${allOccurrences.map(o => {
+        const occKt = KT_MAP[o.annotation.knowledgeType];
+        return `
+          <div class="related-sentence" data-sentence-id="${o.sentence.id}" data-annotation-id="${o.annotation.id}"
+               style="${o.isCurrent ? 'border-left-color:var(--accent);background:var(--accent-light);' : ''}">
+            <div style="font-size:0.7rem;color:var(--text-muted);margin-bottom:2px;">
+              ${o.isCurrent ? '📍 当前' : '📖 ' + formatDate(o.sentence.date)}
+              ${occKt ? ` · <span style="color:${occKt.color}">${occKt.name}</span>` : ''}
+            </div>
+            <div>${highlightWordInSentence(o.sentence.text, o.annotation.text)}</div>
+          </div>`;
+      }).join('')}
+    </div>
+  `;
+
+  // 绑定笔记保存
+  document.getElementById('saveAnnotationNoteBtn').addEventListener('click', () => {
+    const newNote = document.getElementById('rightAnnotationNote').value;
+    // 保存到全局笔记
+    if (!appData.knowledgeNotes) appData.knowledgeNotes = {};
+    appData.knowledgeNotes[noteKey] = newNote;
+    annotation.note = newNote;
+    saveData();
+    // 短暂反馈
+    const btn = document.getElementById('saveAnnotationNoteBtn');
+    btn.textContent = '✅ 已保存';
+    setTimeout(() => { btn.textContent = '💾 保存笔记'; }, 1500);
+  });
+
+  // 绑定相关句子点击
+  body.querySelectorAll('.related-sentence').forEach(el => {
+    el.addEventListener('click', () => {
+      const sid = el.dataset.sentenceId;
+      const aid = el.dataset.annotationId;
+      // 滚动到对应句子
+      const card = document.querySelector(`.sentence-card[data-sentence-id="${sid}"]`);
+      if (card) {
+        card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        card.classList.add('selected');
+        setTimeout(() => card.classList.remove('selected'), 2000);
+      }
+      if (aid) {
+        showAnnotationDetail(sid, aid);
+      }
+    });
+  });
+}
+
+function showVocabDetail(word) {
+  const lowerWord = word.toLowerCase().trim();
+
+  // 找到所有这个词的 vocabulary 记录
+  const records = [];
+  appData.sentences.forEach(s => {
+    (s.vocabulary || []).forEach(v => {
+      if (v.word.toLowerCase().trim() === lowerWord) {
+        records.push({ sentence: s, vocab: v });
+      }
+    });
+  });
+
+  if (records.length === 0) return;
+
+  const primary = records[0].vocab;
+  currentDetail = { type: 'vocab', word: lowerWord };
+
+  const panel = document.getElementById('rightPanel');
+  const title = document.getElementById('rightTypeName');
+  const indicator = document.getElementById('rightTypeIndicator');
+  const body = document.getElementById('rightBody');
+
+  panel.classList.remove('collapsed');
+  indicator.style.background = '#e67e22';
+  title.innerHTML = `📝 生词: <span style="font-family:var(--font-de);">${escapeHtml(primary.word)}</span>`;
+
+  body.innerHTML = `
+    <div class="right-section">
+      <div class="right-section-title">🀄 释义</div>
+      <div style="font-size:1.1rem;padding:8px 12px;background:var(--bg);border-radius:var(--radius-sm);">
+        ${escapeHtml(primary.meaning)}
+      </div>
+      ${primary.note ? `<div style="font-size:0.82rem;color:var(--text-secondary);margin-top:6px;">📝 ${escapeHtml(primary.note)}</div>` : ''}
+    </div>
+
+    <div class="right-section">
+      <div class="right-section-title">📖 出现位置 (${records.length})</div>
+      ${records.map(r => `
+        <div class="related-sentence" data-sentence-id="${r.sentence.id}">
+          <div style="font-size:0.7rem;color:var(--text-muted);margin-bottom:2px;">📖 ${formatDate(r.sentence.date)}</div>
+          <div>${highlightWordInSentence(r.sentence.text, primary.word)}</div>
+        </div>`).join('')}
+    </div>
+  `;
+
+  // 绑定相关句子点击
+  body.querySelectorAll('.related-sentence').forEach(el => {
+    el.addEventListener('click', () => {
+      const sid = el.dataset.sentenceId;
+      const card = document.querySelector(`.sentence-card[data-sentence-id="${sid}"]`);
+      if (card) {
+        card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        card.classList.add('selected');
+        setTimeout(() => card.classList.remove('selected'), 2000);
+      }
+    });
+  });
+}
+
+function showKnowledgeDetailFromIndex(text, typeId) {
+  // 找到第一个匹配的 annotation 并显示
+  const lowerText = text.toLowerCase().trim();
+  for (const s of appData.sentences) {
+    for (const a of s.annotations) {
+      if (a.text.toLowerCase().trim() === lowerText && a.knowledgeType === typeId) {
+        showAnnotationDetail(s.id, a.id);
+        // 滚动到对应句子
+        const card = document.querySelector(`.sentence-card[data-sentence-id="${s.id}"]`);
+        if (card) {
+          card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+        return;
+      }
+    }
+  }
+}
+
+function highlightWordInSentence(sentenceText, word) {
+  const lower = sentenceText.toLowerCase();
+  const lowerWord = word.toLowerCase();
+  const idx = lower.indexOf(lowerWord);
+  if (idx === -1) return escapeHtml(sentenceText);
+  return escapeHtml(sentenceText.slice(0, idx)) +
+    `<span class="highlight-word">${escapeHtml(sentenceText.slice(idx, idx + word.length))}</span>` +
+    escapeHtml(sentenceText.slice(idx + word.length));
+}
+
+function closeRightPanel() {
+  document.getElementById('rightPanel').classList.add('collapsed');
+  currentDetail = null;
+}
+
+// ==========================================
+// 事件绑定: 句子卡片
+// ==========================================
+function bindSentenceCardEvents(container) {
+  // 删除按钮
+  container.querySelectorAll('[data-action="delete-sentence"]').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const sentenceId = btn.dataset.sentenceId;
+      if (confirm('确定删除这个句子吗？相关的标注和词汇也会被删除。')) {
+        appData.sentences = appData.sentences.filter(s => s.id !== sentenceId);
+        saveData();
+        if (currentDetail && currentDetail.sentenceId === sentenceId) {
+          closeRightPanel();
+        }
+        refreshAll();
+      }
+    });
+  });
+
+  // 标注点击
+  container.querySelectorAll('[data-type="annotation"]').forEach(el => {
+    el.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const sentenceId = el.dataset.sentenceId;
+      const annotationId = el.dataset.annotationId;
+      showAnnotationDetail(sentenceId, annotationId);
+    });
+
+    el.addEventListener('mouseenter', (e) => {
+      const annotationId = el.dataset.annotationId;
+      const sentenceId = el.dataset.sentenceId;
+      const sentence = appData.sentences.find(s => s.id === sentenceId);
+      if (!sentence) return;
+      const ann = sentence.annotations.find(a => a.id === annotationId);
+      if (!ann) return;
+      const kt = KT_MAP[ann.knowledgeType];
+      if (!kt) return;
+      showTooltip(e, `${kt.icon} ${kt.name}`, kt.color);
+    });
+
+    el.addEventListener('mouseleave', hideTooltip);
+  });
+
+  // 生词悬浮
+  container.querySelectorAll('[data-type="vocab"]').forEach(el => {
+    el.addEventListener('mouseenter', (e) => {
+      const meaning = el.dataset.meaning;
+      const note = el.dataset.note;
+      let text = `🀄 ${escapeHtml(meaning)}`;
+      if (note) text += `<br><span style="font-size:0.7rem;opacity:0.8;">📝 ${escapeHtml(note)}</span>`;
+      showTooltip(e, text, '#e67e22');
+    });
+
+    el.addEventListener('mouseleave', hideTooltip);
+
+    el.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const sentenceId = el.dataset.sentenceId;
+      const sentence = appData.sentences.find(s => s.id === sentenceId);
+      if (!sentence) return;
+      const vocabId = el.dataset.vocabId;
+      const vocab = (sentence.vocabulary || []).find(v => v.id === vocabId);
+      if (vocab) {
+        showVocabDetail(vocab.word);
+      }
+    });
+  });
+
+  // 句子卡片右键 (标注)
+  container.querySelectorAll('.sentence-card').forEach(card => {
+    card.addEventListener('contextmenu', (e) => {
+      const sel = window.getSelection();
+      const selectedText = sel.toString().trim();
+      if (selectedText && selectedText.length > 0) {
+        e.preventDefault();
+        const sentenceId = card.dataset.sentenceId;
+        showContextMenu(e.clientX, e.clientY, sentenceId, selectedText, sel);
+      }
+    });
+
+    card.addEventListener('dblclick', (e) => {
+      // 利用浏览器双击自动选词的行为
+      // 延迟获取选中的单词
+      setTimeout(() => {
+        const sel = window.getSelection();
+        const word = sel.toString().trim();
+        // 验证是否为有效单词（德语字符 + 拉丁字母）
+        if (word && /^[\wÄäÖöÜüßÀ-ÿ]+$/.test(word) && word.length > 1 && word.length < 40) {
+          const sentenceId = card.dataset.sentenceId;
+          showVocabPopup(e.clientX, e.clientY, sentenceId, word);
+        }
+        // 清除选中
+        if (sel.removeAllRanges) sel.removeAllRanges();
+      }, 20);
+    });
+  });
+
+  // 句子卡片单击选中
+  container.querySelectorAll('.sentence-card').forEach(card => {
+    card.addEventListener('click', () => {
+      // 取消所有选中
+      container.querySelectorAll('.sentence-card.selected').forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+    });
+  });
+
+  // 防止删除按钮冒泡的点击关闭右栏
+  container.querySelectorAll('.sentence-text').forEach(textEl => {
+    textEl.addEventListener('click', (e) => {
+      // 让标注和生词的点击事件处理
+    });
+  });
+}
+
+// ==========================================
+// Context Menu (右键菜单)
+// ==========================================
+function showContextMenu(x, y, sentenceId, selectedText, selection) {
+  const menu = document.getElementById('contextMenu');
+  const sentence = appData.sentences.find(s => s.id === sentenceId);
+  if (!sentence) return;
+
+  // 精确计算选中的文本在原始句子中的偏移量
+  let selStart = -1;
+  try {
+    const card = document.querySelector(`.sentence-card[data-sentence-id="${sentenceId}"]`);
+    if (card) {
+      const textDiv = card.querySelector('.sentence-text');
+      if (textDiv && selection.rangeCount > 0) {
+        const range = selection.getRangeAt(0);
+        const walker = document.createTreeWalker(textDiv, NodeFilter.SHOW_TEXT, null, false);
+        let charCount = 0;
+        let node;
+        while ((node = walker.nextNode())) {
+          if (node === range.startContainer) {
+            selStart = charCount + range.startOffset;
+            break;
+          }
+          charCount += node.textContent.length;
+        }
+      }
+    }
+  } catch (e) { /* 降级 */ }
+  if (selStart === -1) {
+    selStart = findUnannotatedPosition(sentence, selectedText);
+  }
+  if (selStart === -1) return;
+
+  const selEnd = selStart + selectedText.length;
+
+  // 检查是否与已有标注重叠
+  const overlaps = sentence.annotations.some(a =>
+    selStart < a.end && selEnd > a.start
+  );
+
+  let html = `<div class="menu-section">标注为知识点</div>`;
+  if (overlaps) {
+    html += `<div class="menu-section" style="color:#c0392b;text-transform:none;font-size:0.72rem;">
+      ⚠️ 此处已有标注，请先移除再添加新的</div>`;
+  }
+
+  KNOWLEDGE_TYPES.forEach(kt => {
+    html += `
+      <button class="menu-item" data-action="annotate" data-type-id="${kt.id}"
+              data-sentence-id="${sentenceId}" data-start="${selStart}" data-end="${selEnd}"
+              data-text="${escapeHtml(selectedText)}">
+        <span class="menu-color-dot" style="background:${kt.color};height:14px;border-radius:2px;"></span>
+        <span>${kt.icon} ${kt.name}</span>
+        <span class="menu-line-preview" style="text-decoration:${kt.line} underline;text-decoration-color:${kt.color};text-underline-offset:2px;">${kt.nameDe}</span>
+      </button>`;
+  });
+
+  // 移除已有标注
+  const existingAnn = sentence.annotations.find(a =>
+    (selStart <= a.startIndex && selEnd >= a.endIndex) ||
+    (Math.abs(selStart - a.startIndex) <= 2 && Math.abs(selEnd - a.endIndex) <= 2)
+  );
+  if (existingAnn) {
+    const kt = KT_MAP[existingAnn.knowledgeType];
+    html += `<div class="menu-section" style="margin-top:4px;">操作</div>`;
+    html += `
+      <button class="menu-item" data-action="remove-annotation"
+              data-sentence-id="${sentenceId}" data-annotation-id="${existingAnn.id}"
+              style="color:#c0392b;">
+        🗑 移除 ${kt ? kt.name : ''}: ${escapeHtml(existingAnn.text.length > 20 ? existingAnn.text.slice(0, 20) + '...' : existingAnn.text)}
+      </button>`;
+  }
+
+  menu.innerHTML = html;
+  // 先让菜单可见以获取正确尺寸，但保持透明避免闪烁
+  menu.style.display = 'block';
+  menu.style.opacity = '0';
+  // 强制布局计算
+  const menuHeight = menu.offsetHeight;
+  menu.style.left = Math.min(x, window.innerWidth - 260) + 'px';
+  menu.style.top = Math.min(y, window.innerHeight - menuHeight - 10) + 'px';
+  menu.style.opacity = '1';
+
+  // 绑定菜单项点击
+  menu.querySelectorAll('.menu-item').forEach(item => {
+    item.addEventListener('click', () => {
+      const action = item.dataset.action;
+      if (action === 'annotate') {
+        const typeId = item.dataset.typeId;
+        const sid = item.dataset.sentenceId;
+        const start = parseInt(item.dataset.start);
+        const end = parseInt(item.dataset.end);
+        const text = item.dataset.text;
+        addAnnotation(sid, typeId, start, end, text);
+      } else if (action === 'remove-annotation') {
+        const sid = item.dataset.sentenceId;
+        const aid = item.dataset.annotationId;
+        removeAnnotation(sid, aid);
+      }
+      hideContextMenu();
+    });
+  });
+}
+
+function hideContextMenu() {
+  document.getElementById('contextMenu').style.display = 'none';
+}
+
+function addAnnotation(sentenceId, knowledgeType, startIndex, endIndex, text) {
+  const sentence = appData.sentences.find(s => s.id === sentenceId);
+  if (!sentence) return;
+
+  // 检查重叠
+  const overlaps = sentence.annotations.some(a =>
+    startIndex < a.end && endIndex > a.start
+  );
+  if (overlaps) {
+    alert('此处已有标注，请先移除再添加新的。');
+    return;
+  }
+
+  const kt = KT_MAP[knowledgeType];
+  const annotation = {
+    id: genId(),
+    knowledgeType,
+    startIndex,
+    endIndex,
+    text,
+    color: kt ? kt.color : '#999',
+    lineStyle: kt ? kt.line : 'wavy',
+    note: '',
+    date: new Date().toISOString()
+  };
+
+  sentence.annotations.push(annotation);
+  saveData();
+  refreshAll();
+
+  // 自动打开右栏详情
+  showAnnotationDetail(sentenceId, annotation.id);
+}
+
+function removeAnnotation(sentenceId, annotationId) {
+  const sentence = appData.sentences.find(s => s.id === sentenceId);
+  if (!sentence) return;
+  sentence.annotations = sentence.annotations.filter(a => a.id !== annotationId);
+  saveData();
+  if (currentDetail && currentDetail.annotationId === annotationId) {
+    closeRightPanel();
+  }
+  refreshAll();
+}
+
+// ==========================================
+// 词汇弹窗 (双击)
+// ==========================================
+function showVocabPopup(x, y, sentenceId, word) {
+  const popup = document.getElementById('vocabPopup');
+  const sentence = appData.sentences.find(s => s.id === sentenceId);
+  if (!sentence) return;
+
+  // 检查这个词是否已有词汇记录
+  const existing = (sentence.vocabulary || []).find(v => v.word.toLowerCase().trim() === word.toLowerCase().trim());
+
+  document.getElementById('vpWord').textContent = word;
+  document.getElementById('vpMeaning').value = existing ? existing.meaning : '';
+  document.getElementById('vpNote').value = existing ? (existing.note || '') : '';
+
+  popup.style.display = 'block';
+  popup.style.left = Math.min(x, window.innerWidth - 320) + 'px';
+  popup.style.top = Math.min(y, window.innerHeight - 200) + 'px';
+
+  // 聚焦输入框
+  setTimeout(() => {
+    if (existing) {
+      document.getElementById('vpNote').focus();
+    } else {
+      document.getElementById('vpMeaning').focus();
+    }
+  }, 100);
+
+  // 保存
+  document.getElementById('vpSave').onclick = () => {
+    const meaning = document.getElementById('vpMeaning').value.trim();
+    const note = document.getElementById('vpNote').value.trim();
+    if (!meaning) { alert('请输入释义'); return; }
+
+    if (!sentence.vocabulary) sentence.vocabulary = [];
+
+    if (existing) {
+      // 更新已有记录
+      existing.meaning = meaning;
+      existing.note = note;
+    } else {
+      sentence.vocabulary.push({
+        id: genId(),
+        word,
+        meaning,
+        note,
+        date: new Date().toISOString()
+      });
+    }
+    saveData();
+    hideVocabPopup();
+    refreshAll();
+  };
+
+  document.getElementById('vpCancel').onclick = hideVocabPopup;
+}
+
+function hideVocabPopup() {
+  document.getElementById('vocabPopup').style.display = 'none';
+}
+
+// ==========================================
+// Tooltip
+// ==========================================
+function showTooltip(e, text, color) {
+  const tt = document.getElementById('tooltip');
+  tt.innerHTML = text;
+  tt.style.borderLeft = `3px solid ${color || '#999'}`;
+  tt.classList.add('visible');
+  positionTooltip(e, tt);
+}
+
+function hideTooltip() {
+  document.getElementById('tooltip').classList.remove('visible');
+}
+
+function positionTooltip(e, tt) {
+  let x = e.clientX + 14;
+  let y = e.clientY - 10;
+  const rect = tt.getBoundingClientRect();
+  if (x + rect.width > window.innerWidth - 10) x = e.clientX - rect.width - 14;
+  if (y + rect.height > window.innerHeight - 10) y = e.clientY - rect.height - 10;
+  if (y < 10) y = 10;
+  tt.style.left = x + 'px';
+  tt.style.top = y + 'px';
+}
+
+// ==========================================
+// 全局事件
+// ==========================================
+document.addEventListener('click', (e) => {
+  // 点击菜单外关闭右键菜单
+  const menu = document.getElementById('contextMenu');
+  if (menu.style.display === 'block' && !menu.contains(e.target)) {
+    hideContextMenu();
+  }
+  // 点击图例外关闭
+  const legend = document.getElementById('legendPanel');
+  const legendBtn = document.getElementById('legendToggle');
+  if (legend.classList.contains('show') && !legend.contains(e.target) && e.target !== legendBtn) {
+    legend.classList.remove('show');
+  }
+  // 点击弹窗外关闭
+  const popup = document.getElementById('vocabPopup');
+  if (popup.style.display === 'block' && !popup.contains(e.target)) {
+    hideVocabPopup();
+  }
+});
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    hideContextMenu();
+    hideVocabPopup();
+  }
+});
+
+// 滚动时隐藏 tooltip
+document.addEventListener('scroll', hideTooltip, true);
+
+// ==========================================
+// 图例面板
+// ==========================================
+function buildLegend() {
+  const panel = document.getElementById('legendPanel');
+  let html = '<div style="font-weight:600;margin-bottom:10px;">🎨 C1 知识点图例</div>';
+  KNOWLEDGE_TYPES.forEach(kt => {
+    const style = `text-decoration:${kt.line} underline;text-decoration-color:${kt.color};text-underline-offset:4px;`;
+    html += `
+      <div class="legend-item">
+        <span class="legend-line" style="${style};color:var(--text);font-family:var(--font-de);">Text</span>
+        <span>${kt.icon} ${kt.name}</span>
+        <span style="font-size:0.7rem;color:var(--text-muted);margin-left:auto;">${kt.nameDe}</span>
+      </div>`;
+  });
+  html += '<div style="margin-top:10px;padding-top:8px;border-top:1px solid var(--border);font-size:0.72rem;color:var(--text-muted);">💡 <strong>生词</strong>: 黄色荧光笔背景</div>';
+  panel.innerHTML = html;
+}
+
+// ==========================================
+// 导出/导入
+// ==========================================
+function exportData() {
+  const blob = new Blob([JSON.stringify(appData, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `german-learning-backup-${new Date().toISOString().slice(0, 10)}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function importData(file) {
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (!data.sentences || !Array.isArray(data.sentences)) {
+        throw new Error('无效的数据格式');
+      }
+      if (confirm(`即将导入 ${data.sentences.length} 个句子。这将替换当前数据，确定继续？`)) {
+        appData = {
+          version: 2,
+          sentences: data.sentences,
+          knowledgeNotes: data.knowledgeNotes || {}
+        };
+        saveData();
+        closeRightPanel();
+        refreshAll();
+        alert('✅ 导入成功！');
+      }
+    } catch (err) {
+      alert('❌ 导入失败：' + err.message);
+    }
+  };
+  reader.readAsText(file);
+}
+
+// ==========================================
+// 刷新
+// ==========================================
+let currentLeftTab = 'vocab';
+
+function refreshAll() {
+  renderAllSentences();
+  renderLeftPanel(currentLeftTab);
+  // 如果详情面板打开且有选中项，尝试刷新
+  if (currentDetail) {
+    if (currentDetail.type === 'annotation' && currentDetail.sentenceId && currentDetail.annotationId) {
+      const sentence = appData.sentences.find(s => s.id === currentDetail.sentenceId);
+      const ann = sentence ? sentence.annotations.find(a => a.id === currentDetail.annotationId) : null;
+      if (sentence && ann) {
+        showAnnotationDetail(currentDetail.sentenceId, currentDetail.annotationId);
+      } else {
+        closeRightPanel();
+      }
+    } else if (currentDetail.type === 'vocab' && currentDetail.word) {
+      showVocabDetail(currentDetail.word);
+    }
+  }
+}
+
+// ==========================================
+// 初始化
+// ==========================================
+function initDemoData() {
+  // 仅在没有任何数据时添加演示数据
+  if (appData.sentences.length > 0) return;
+
+  const demoSentences = [
+    {
+      id: genId(),
+      text: 'Der Mann, der dort steht, ist mein Bruder.',
+      date: new Date('2026-07-29').toISOString(),
+      annotations: [
+        { id: genId(), knowledgeType: 'sub-clause', startIndex: 10, endIndex: 27, text: 'der dort steht', color: '#6B8E23', lineStyle: 'double', note: '关系从句，der 指代 Mann（阳性单数第一格）', date: new Date('2026-07-29').toISOString() }
+      ],
+      vocabulary: [
+        { id: genId(), word: 'Bruder', meaning: '兄弟', note: 'der Bruder, -ü-', date: new Date('2026-07-29').toISOString() }
+      ]
+    },
+    {
+      id: genId(),
+      text: 'Es wird erwartet, dass die Studenten pünktlich erscheinen.',
+      date: new Date('2026-07-28').toISOString(),
+      annotations: [
+        { id: genId(), knowledgeType: 'passiv', startIndex: 0, endIndex: 17, text: 'Es wird erwartet', color: '#E67E22', lineStyle: 'wavy', note: '无人称被动态：es wird + Partizip II', date: new Date('2026-07-28').toISOString() },
+        { id: genId(), knowledgeType: 'sub-clause', startIndex: 19, endIndex: 57, text: 'dass die Studenten pünktlich erscheinen', color: '#6B8E23', lineStyle: 'double', note: 'dass 从句，变位动词移至句末', date: new Date('2026-07-28').toISOString() }
+      ],
+      vocabulary: [
+        { id: genId(), word: 'erwarten', meaning: '期待、预料', note: '及物动词，此处为被动', date: new Date('2026-07-28').toISOString() },
+        { id: genId(), word: 'pünktlich', meaning: '准时的', note: '形容词/副词', date: new Date('2026-07-28').toISOString() },
+        { id: genId(), word: 'erscheinen', meaning: '出现；显得', note: 'erscheint, erschien, ist erschienen', date: new Date('2026-07-28').toISOString() }
+      ]
+    },
+    {
+      id: genId(),
+      text: 'Wenn ich reich wäre, würde ich eine Weltreise machen.',
+      date: new Date('2026-07-27').toISOString(),
+      annotations: [
+        { id: genId(), knowledgeType: 'konjunktiv', startIndex: 0, endIndex: 20, text: 'Wenn ich reich wäre', color: '#1ABC9C', lineStyle: 'dashed', note: 'Konjunktiv II 非现实条件句：wäre (sein 的 KII)', date: new Date('2026-07-27').toISOString() },
+        { id: genId(), knowledgeType: 'konjunktiv', startIndex: 22, endIndex: 52, text: 'würde ich eine Weltreise machen', color: '#1ABC9C', lineStyle: 'dashed', note: 'würde + 不定式 替代 KII，口语常用', date: new Date('2026-07-27').toISOString() }
+      ],
+      vocabulary: [
+        { id: genId(), word: 'reich', meaning: '富有的', note: '', date: new Date('2026-07-27').toISOString() },
+        { id: genId(), word: 'Weltreise', meaning: '环球旅行', note: 'die Weltreise, -n', date: new Date('2026-07-27').toISOString() }
+      ]
+    },
+    {
+      id: genId(),
+      text: 'Ich warte auf den Bus, der jede Stunde vorbeikommt.',
+      date: new Date('2026-07-26').toISOString(),
+      annotations: [
+        { id: genId(), knowledgeType: 'fixed-expr', startIndex: 4, endIndex: 12, text: 'warte auf', color: '#9B59B6', lineStyle: 'wavy', note: '固定搭配：warten auf + Akk.', date: new Date('2026-07-26').toISOString() },
+        { id: genId(), knowledgeType: 'prep-case', startIndex: 13, endIndex: 20, text: 'den Bus', color: '#A0522D', lineStyle: 'underline', note: '静三动四：auf 支配第四格 (Akkusativ)，den 是阳性单数第四格冠词', date: new Date('2026-07-26').toISOString() }
+      ],
+      vocabulary: [
+        { id: genId(), word: 'vorbeikommen', meaning: '经过、路过', note: 'kommen + vorbei (可分动词)', date: new Date('2026-07-26').toISOString() }
+      ]
+    },
+    {
+      id: genId(),
+      text: 'Das von dem Schüler geschriebene Gedicht war ausgezeichnet.',
+      date: new Date('2026-07-25').toISOString(),
+      annotations: [
+        { id: genId(), knowledgeType: 'partizip', startIndex: 4, endIndex: 37, text: 'von dem Schüler geschriebene', color: '#3F51B5', lineStyle: 'dashed', note: '分词结构作定语：Partizip II + 形容词词尾，相当于关系从句 das von dem Schüler geschrieben wurde', date: new Date('2026-07-25').toISOString() }
+      ],
+      vocabulary: [
+        { id: genId(), word: 'ausgezeichnet', meaning: '出色的、优秀的', note: '形容词，原形 auszeichnen (奖励)', date: new Date('2026-07-25').toISOString() },
+        { id: genId(), word: 'Gedicht', meaning: '诗歌', note: 'das Gedicht, -e', date: new Date('2026-07-25').toISOString() }
+      ]
+    }
+  ];
+
+  // 添加全局知识点笔记
+  appData.knowledgeNotes = {
+    'sub-clause:der dort steht': 'C1 关系从句。注意关系代词 der/die/das 的性与格取决于其在从句中的语法功能。\n\n此处 der 为阳性单数第一格（主语），指代 Mann。',
+    'passiv:es wird erwartet': 'C1 无人称被动态。用 es 占位，真正主语是 dass 从句。\n\n结构: es + werden (变位) + Partizip II + dass-Satz',
+    'konjunktiv:wenn ich reich wäre': 'C1 非现实条件句 (Irrealis der Gegenwart)。\n\n结构: Wenn + KII (Gegenwartsform) + 主句 KII / würde-Form',
+    'fixed-expr:auf den bus': 'C1 固定搭配 warten auf + Akk.。\n\n类似: hoffen auf / sich freuen auf / verzichten auf'
+  };
+
+  appData.sentences = demoSentences;
+  saveData();
+}
+
+function init() {
+  loadData();
+  initDemoData();
+  buildLegend();
+  renderAllSentences();
+  renderLeftPanel(currentLeftTab);
+
+  // 添加句子按钮
+  document.getElementById('addSentenceBtn').addEventListener('click', () => {
+    const input = document.getElementById('sentenceInput');
+    const text = input.value.trim();
+    if (!text) { alert('请输入德语句子'); return; }
+
+    const sentence = {
+      id: genId(),
+      text,
+      date: new Date().toISOString(),
+      annotations: [],
+      vocabulary: []
+    };
+    appData.sentences.push(sentence);
+    saveData();
+    input.value = '';
+    input.focus();
+    refreshAll();
+
+    // 滚动到新句子
+    setTimeout(() => {
+      const card = document.querySelector(`.sentence-card[data-sentence-id="${sentence.id}"]`);
+      if (card) card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 100);
+  });
+
+  // Enter 键添加句子 (Ctrl+Enter)
+  document.getElementById('sentenceInput').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && e.ctrlKey) {
+      e.preventDefault();
+      document.getElementById('addSentenceBtn').click();
+    }
+  });
+
+  // 左栏标签切换
+  document.querySelectorAll('.left-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.left-tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      currentLeftTab = tab.dataset.tab;
+      renderLeftPanel(currentLeftTab);
+    });
+  });
+
+  // 关闭右栏
+  document.getElementById('rightCloseBtn').addEventListener('click', closeRightPanel);
+
+  // 图例
+  document.getElementById('legendToggle').addEventListener('click', () => {
+    document.getElementById('legendPanel').classList.toggle('show');
+  });
+
+  // 导出
+  document.getElementById('exportBtn').addEventListener('click', exportData);
+
+  // 导入
+  document.getElementById('importBtn').addEventListener('click', () => {
+    document.getElementById('importFile').click();
+  });
+  document.getElementById('importFile').addEventListener('change', (e) => {
+    if (e.target.files[0]) importData(e.target.files[0]);
+    e.target.value = '';
+  });
+
+  // 清空
+  document.getElementById('clearAllBtn').addEventListener('click', () => {
+    if (confirm('⚠️ 确定清空所有数据吗？此操作不可撤销！\n\n建议先导出备份。')) {
+      if (confirm('再次确认：清空所有句子、标注和词汇？')) {
+        appData = { version: 2, sentences: [], knowledgeNotes: {} };
+        saveData();
+        closeRightPanel();
+        refreshAll();
+      }
+    }
+  });
+
+  console.log('📚 德语学习笔记 · C1 Grammatik Tracker 已就绪');
+  console.log('💡 功能提示:');
+  console.log('  - 选中文字 + 右键 → 标注知识点');
+  console.log('  - 双击生词 → 添加释义');
+  console.log('  - 点击标注 → 查看详情');
+  console.log('  - 悬浮标注/生词 → 查看提示');
+  console.log('  - Ctrl+Enter → 快速添加句子');
+}
+
+// 启动
+document.addEventListener('DOMContentLoaded', init);
+</script>
+
+</body>
+</html>

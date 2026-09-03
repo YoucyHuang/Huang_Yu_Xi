@@ -303,3 +303,9 @@ img{box-shadow:0 0 0 var(--img-border-w) var(--img-border-c)}
 .video-wrap{margin-top:1rem;width:100%}
 .video-wrap video{width:100%;border-radius:12px;background:var(--paper)}
 @media(max-width:700px){.duo-grid{grid-template-columns:1fr}}
+/* 项目页：纯文字 + 详情按钮 */
+.project-item{padding:2.5rem 0;border-bottom:1px solid var(--rule-light)}
+.project-item:last-of-type{border-bottom:none}
+.project-item h3{font-size:1.3rem;font-weight:600;margin-bottom:.8rem}
+.project-item p{font-size:.92rem;color:var(--ink-light);line-height:1.9;max-width:760px;margin:0}
+.project-item .detail-row{text-align:right;margin-top:1.2rem}
