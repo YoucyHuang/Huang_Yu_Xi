@@ -30,28 +30,47 @@
 
     <div class="rule"></div>
 
-    <!-- AIGC 短片 -->
-    <div style="margin-top:2rem;">
-      <h3 style="font-size:1.25rem;font-weight:600;margin-bottom:1rem;">AIGC 短片</h3>
-      <video src="assets/videos/aigc-clip.mp4" controls playsinline preload="metadata" style="width:100%;max-width:860px;display:block;background:var(--paper);border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:1rem;"></video>
-      <p style="font-size:.9rem;color:var(--ink-light);">AI 生成短片（38 秒，1080P）。</p>
+    <div class="duo-grid">
+      <!-- 左：AIGC -->
+      <div class="duo-col">
+        <h2 class="duo-head">AIGC</h2>
+
+        <div class="duo-item">
+          <h3>AIGC小短片</h3>
+          <p class="duo-sub">悟空吃桃</p>
+          <button class="detail-toggle" onclick="toggleVideo()">查看详情</button>
+          <div class="video-wrap" id="aigc-video" style="display:none;">
+            <video src="assets/videos/aigc-clip.mp4" controls playsinline preload="metadata"></video>
+          </div>
+        </div>
+
+        <div class="duo-item">
+          <h3>新媒体运营作品集</h3>
+          <p class="duo-sub"><a class="link" href="https://youcyhuang.github.io/content-portfolio/" target="_blank" rel="noopener">点击进入 →</a></p>
+        </div>
+      </div>
+
+      <!-- 右：vibe coding -->
+      <div class="duo-col">
+        <h2 class="duo-head">vibe coding</h2>
+
+        <div class="duo-item">
+          <h3>Midjourney 图像</h3>
+          <p class="duo-sub">即将更新</p>
+        </div>
+
+        <div class="duo-item">
+          <h3>AIGC 设计项目书</h3>
+          <p class="duo-sub">即将更新</p>
+        </div>
+
+        <div class="duo-item">
+          <h3>德语学习笔记</h3>
+          <p class="duo-sub"><a class="link" href="#" target="_blank" rel="noopener">链接待添加</a></p>
+        </div>
+      </div>
     </div>
 
-    <div class="rule"></div>
-
-    <!-- 更多 AIGC 项目 -->
-    <div class="card-grid" style="margin-top:2rem;">
-      <div class="card">
-        <h3>Midjourney 图像</h3>
-        <p class="desc">即将更新</p>
-        <span class="tag">AIGC · IMAGE</span>
-      </div>
-      <div class="card">
-        <h3>AIGC 设计项目书</h3>
-        <p class="desc">即将更新</p>
-        <span class="tag">AIGC · DESIGN</span>
-      </div>
-    </div>
   </div>
 </main>
 
@@ -64,6 +83,12 @@
   </p>
 </footer>
 
+<script>
+function toggleVideo(){
+  var v = document.getElementById('aigc-video');
+  v.style.display = (v.style.display === 'none') ? 'block' : 'none';
+}
+</script>
 <script src="assets/js/editable.js"></script>
 <script src="assets/js/export.js"></script>
 </body>
