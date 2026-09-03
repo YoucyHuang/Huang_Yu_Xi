@@ -1,20 +1,24 @@
 /**
- * 摄影 —— 自由画布：拖拽上传照片，图片可拖动、缩放、删除
- * 依赖 interact.js（CDN）。照片与位置保存在浏览器本地。
+ * 项目详情 —— 自由画布：拖拽上传、拖动排布、缩放、可调节画布长度
+ * 依赖 interact.js（CDN）。按 URL 参数 p=项目id 分开存储。
  */
-var Photo = (function(){
+var Detail = (function(){
   'use strict';
+  function pid(){
+    var m=(location.search||'').match(/[?&]p=([^&]+)/);
+    return m ? m[1] : 'default';
+  }
+  var P = pid();
+  var LS = 'youcy_cn_detail_'+P;
   var boxes = [];
-  function load(){ try{ var s=localStorage.getItem('youcy_cn_photos'); if(s) boxes=JSON.parse(s)||[]; }catch(e){} }
-  function save(){ try{ localStorage.setItem('youcy_cn_photos',JSON.stringify(boxes)); }catch(e){} }
+  function load(){ try{ var s=localStorage.getItem(LS); if(s) boxes=JSON.parse(s)||[]; }catch(e){} }
+  function save(){ try{ localStorage.setItem(LS,JSON.stringify(boxes)); }catch(e){} }
 
   function render(){
     var root=document.getElementById('vs-content');
     if(!root) return;
     var h='';
-    if(!boxes.length){
-      h='<span class="vs-drop-hint">拖入照片到画布任意位置，或点击上方「＋ 添加照片」</span>';
-    }
+    if(!boxes.length){ h='<span class="vs-drop-hint">拖入图片到画布任意位置，或点击上方「＋ 添加图片」</span>'; }
     boxes.forEach(function(b){
       h+='<div class="vs-img" data-box="'+b.id+'" style="left:'+(b.x||80)+'px;top:'+(b.y||80)+'px;width:'+(b.w||260)+'px;height:'+(b.h||200)+'px">'
         +'<img src="'+b.img+'" alt="" draggable="false">'
@@ -41,15 +45,15 @@ var Photo = (function(){
   }
   function sizeCanvas(){
     var c=document.getElementById('vs-content'); if(!c) return;
-    c.style.height=fitHeight()+'px';
+    var saved=0;
+    try{ saved=parseInt(localStorage.getItem(LS+'_h')||'0'); }catch(e){}
+    c.style.height=Math.max(fitHeight(), saved)+'px';
   }
 
   function select(el){ deselectAll(); if(el) el.classList.add('active'); }
   function deselectAll(){ document.querySelectorAll('.vs-img.active').forEach(function(el){ el.classList.remove('active'); }); }
-
   function persist(el){
-    var id=el.getAttribute('data-box');
-    if(!id) return;
+    var id=el.getAttribute('data-box'); if(!id) return;
     for(var i=0;i<boxes.length;i++){
       if(boxes[i].id===id){
         boxes[i].x=Math.round(parseFloat(el.style.left)||0);
@@ -146,6 +150,28 @@ var Photo = (function(){
     input.click();
   }
 
+  function bindResizer(){
+    var c=document.getElementById('vs-content');
+    var r=document.getElementById('vs-resizer');
+    if(!c || !r) return;
+    var startY=0, startH=0;
+    r.addEventListener('pointerdown',function(e){
+      e.preventDefault();
+      startY=e.clientY; startH=c.offsetHeight;
+      function move(ev){
+        var nh=Math.max(400, startH+(ev.clientY-startY));
+        c.style.height=nh+'px';
+        try{ localStorage.setItem(LS+'_h', nh); }catch(err){}
+      }
+      function up(){
+        window.removeEventListener('pointermove',move);
+        window.removeEventListener('pointerup',up);
+      }
+      window.addEventListener('pointermove',move);
+      window.addEventListener('pointerup',up);
+    });
+  }
+
   function lightbox(src){
     var lb=document.getElementById('lightbox');
     if(!lb) return;
@@ -163,6 +189,7 @@ var Photo = (function(){
   load();
   render();
   bindDrop();
+  bindResizer();
 
   return { addPhoto:addPhoto, lightbox:lightbox };
 })();
